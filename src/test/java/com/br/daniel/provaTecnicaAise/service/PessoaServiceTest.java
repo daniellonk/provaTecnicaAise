@@ -25,7 +25,7 @@ public class PessoaServiceTest {
     public void deveValidarPfj(){
         repository.deleteAll();
 
-        service.validarPFJ("05884843933");
+        service.validarPfjExiste("05884843933");
     }
 
     @Test
@@ -33,6 +33,6 @@ public class PessoaServiceTest {
         Pessoa pessoa = Pessoa.builder().nomePessoa("Daniel").pfjPessoa("05884843933").tipo(TipoPessoa.FISICA).build();
         repository.save(pessoa);
 
-        service.validarPFJ("05884843933");
+        service.validarPfjExiste("05884843933");
     }
 }

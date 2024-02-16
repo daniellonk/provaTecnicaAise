@@ -16,7 +16,7 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
-    void validarPFJ(String pfjPessoa){
+    void validarPfjExiste(String pfjPessoa){
         boolean exists = pessoaRepository.existsByPfjPessoa(pfjPessoa);
         if(exists){
             throw new RegraNegocioException("Já existe uma pessoa com esse CPF/CNPJ");

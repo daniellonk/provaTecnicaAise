@@ -1,5 +1,7 @@
 package com.br.daniel.provaTecnicaAise.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,17 +20,23 @@ import java.time.LocalDate;
 @Table(name = "debito", schema = "aise")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Debito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="iddebito")
     private Long idDebito;
 
     @ManyToOne
     @JoinColumn
+    @Column(name="idpessoa")
     private Pessoa idPessoa;
 
+    @Column(name="datalancamento")
     private LocalDate dataLancamento;
 
+    @Column(name="origemdebito")
     private String origemDebito;
 }
