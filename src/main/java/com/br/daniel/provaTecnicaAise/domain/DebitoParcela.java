@@ -33,8 +33,7 @@ public class DebitoParcela {
     private Long idDebitoParcela;
 
     @ManyToOne
-    @JoinColumn
-    @Column(name="iddebito")
+    @JoinColumn(name="iddebito")
     private Debito idDebito;
 
     @Column(name="parcela")

@@ -1,37 +1,38 @@
 package com.br.daniel.provaTecnicaAise.service;
 
-import com.br.daniel.provaTecnicaAise.domain.Pessoa;
-import com.br.daniel.provaTecnicaAise.enumerator.TipoPessoa;
 import com.br.daniel.provaTecnicaAise.repository.PessoaRepository;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 public class PessoaServiceTest {
 
-    @Autowired
+    @InjectMocks
     PessoaService service;
-
-    @Autowired
+    @Mock
     PessoaRepository repository;
+    @Before
+    public void setUp(){
+        service = new PessoaService(repository);
+    }
 
     @Test
     public void deveValidarPfj(){
-        repository.deleteAll();
+        Mockito.when(repository.existsByPfjPessoa(Mockito.anyString())).thenReturn(false);
 
         service.validarPfjExiste("05884843933");
     }
 
     @Test
     public void deveLancarErroQuandoEncontrarPfjCadastrado(){
-        Pessoa pessoa = Pessoa.builder().nomePessoa("Daniel").pfjPessoa("05884843933").tipo(TipoPessoa.FISICA).build();
-        repository.save(pessoa);
+        Mockito.when(repository.existsByPfjPessoa(Mockito.anyString())).thenReturn(true);
 
         service.validarPfjExiste("05884843933");
     }

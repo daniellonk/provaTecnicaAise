@@ -1,7 +1,6 @@
 package com.br.daniel.provaTecnicaAise.domain;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +29,8 @@ public class Debito {
     private Long idDebito;
 
     @ManyToOne
-    @JoinColumn
-    @Column(name="idpessoa")
-    private Pessoa idPessoa;
+    @JoinColumn(name="idpessoa")
+    private Pessoa pessoa;
 
     @Column(name="datalancamento")
     private LocalDate dataLancamento;
