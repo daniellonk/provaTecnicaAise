@@ -5,6 +5,7 @@ import com.br.daniel.provaTecnicaAise.domain.Pessoa;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class DebitoDto {
@@ -14,12 +15,15 @@ public class DebitoDto {
     private LocalDate dataLancamento;
     private String origemDebito;
 
+    private List<DebitoParcelaDto> debitoParcelasDto;
+
     public static DebitoDto convertToDTO(Debito entity) {
         DebitoDto dto = new DebitoDto();
         dto.setIdDebito(entity.getIdDebito());
         dto.setPessoa(entity.getPessoa());
         dto.setDataLancamento(entity.getDataLancamento());
         dto.setOrigemDebito(entity.getOrigemDebito());
+        dto.setDebitoParcelasDto(DebitoParcelaDto.convertToListDTO(entity.getParcela()));
 
         return dto;
     }
