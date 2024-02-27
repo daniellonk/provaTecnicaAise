@@ -58,4 +58,13 @@ public class DebitoParcela {
     @NotNull(message = "Situação da Parcela é obrigatória")
     @Convert(converter = SituacaoParcelaConverter.class)
     private SituacaoParcela situacao;
+    public boolean validaDataVencimento(){
+        return this.getDataVencimento().compareTo(LocalDate.now()) <= 0;
+    }
+
+    public boolean validaValorParcela(){
+        return this.getValor().doubleValue() <= 0;
+    }
+
+
 }

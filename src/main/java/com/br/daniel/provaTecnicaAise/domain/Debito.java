@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -45,4 +46,11 @@ public class Debito {
 
     @OneToMany(mappedBy = "debito", fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DebitoParcela> parcela = new ArrayList<>();
+
+    public boolean validaMinimoParcela(){
+        return this.getParcela().isEmpty();
+    }
+    public boolean validaDataLancamento(){
+        return this.getDataLancamento().compareTo(LocalDate.now()) > 0;
+    }
 }

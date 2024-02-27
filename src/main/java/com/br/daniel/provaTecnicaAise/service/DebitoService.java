@@ -8,6 +8,7 @@ import com.br.daniel.provaTecnicaAise.dto.DebitoDtoPost;
 import com.br.daniel.provaTecnicaAise.dto.DebitoParcelaDto;
 import com.br.daniel.provaTecnicaAise.repository.DebitoRepository;
 import com.br.daniel.provaTecnicaAise.repository.PessoaRepository;
+import com.br.daniel.provaTecnicaAise.service.exception.RegraNegocioException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -65,6 +66,15 @@ public class DebitoService {
         for (DebitoParcelaDto debitoParcelaDto : debitoDtoPost.getDebitoParcela()) {
 
             DebitoParcela debitoParcelas = DebitoParcelaDto.convertToEntity(debitoParcelaDto, debito);
+
+            if(debitoParcelas.validaDataVencimento()){
+                throw new RegraNegocioException("Data de Vencimento deve ser maior que hoje");
+            }
+
+            if(debitoParcelas.validaValorParcela()){
+                throw new RegraNegocioException("Valor da Parcela deve ser maior que zero");
+            }
+
             debitoParcela.add(debitoParcelas);
         }
     }
@@ -78,8 +88,15 @@ public class DebitoService {
 
         gravaDebitoParcela(debito, debitoDtoPost);
 
-        Debito saved = debitoRepository.save(debito);
+        if(debito.validaMinimoParcela()){
+            throw new RegraNegocioException("Obrigatório no minímo uma parcela");
+        }
 
+        if(debito.validaDataLancamento()){
+            throw new RegraNegocioException("Data Lançamento deve ser menor ou igual hoje");
+        }
+
+        Debito saved = debitoRepository.save(debito);
         return DebitoDto.convertToDTO(saved);
     }
     @Transactional
