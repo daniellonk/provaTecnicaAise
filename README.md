@@ -30,3 +30,32 @@
   * Salvar em algum banco de dados relacional
   * Testes unitários e de integração
 
+
+# Scripts Banco
+
+```
+create table aise.pessoa(
+  idPessoa bigserial NOT NULL PRIMARY KEY,
+  nomePessoa varchar(200) not null,
+  pfjPessoa varchar(14) not null,
+  tipo VARCHAR(8) check(tipo in ('FISICA', 'JURIDICA')) not null
+);
+
+create table aise.debito(
+  idDebito bigserial NOT NULL PRIMARY KEY,
+  idPessoa bigserial not null,
+  dataLancamento date not null,
+  origemDebito varchar(200) not null,
+  constraint fkidPessoa foreign key (idPessoa) references pessoa (idPessoa)
+);
+
+create table aise.debitoParcela(
+  idDebitoParcela bigserial NOT NULL PRIMARY KEY,
+  idDebito bigserial not null,
+  parcela integer not null,
+  dataVencimento date not null,
+  valor numeric(15,2) not null,
+  situacao VARCHAR(6) check(situacao in ('ABERTO', 'PAGO')) not null,
+  constraint fkidDebito foreign key (idDebito) references debito (iddebito)
+);
+```
