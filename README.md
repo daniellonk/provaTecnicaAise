@@ -59,3 +59,99 @@ create table aise.debitoParcela(
   constraint fkidDebito foreign key (idDebito) references debito (iddebito)
 );
 ```
+
+
+# Endpoints 
+
+## Pessoa
+
+```
+Pessoa Insert
+POST - localhost:8080/api/pessoa
+JSON
+{
+	"nomePessoa": "Jose",
+	"pfjPessoa": "05884843933",
+	"tipo": "FISICA"
+}
+```
+
+```
+Pessoa GetById
+GET - localhost:8080/api/pessoa/1
+```
+
+## Débito
+
+```
+Debito Insert
+POST - localhost:8080/api/debito
+JSON
+{
+	"idPessoa": 3,
+	"dataLancamento": "2024-02-27",
+	"origemDebito": "ISS",
+	"debitoParcela": [
+        {
+            "parcela": 1,
+            "dataVencimento": "2024-06-05",
+            "situacao": "ABERTO",
+            "valor": 0.00
+        },
+        {
+						"parcela": 2,
+            "dataVencimento": "2024-08-05",
+            "situacao": "ABERTO",
+            "valor": 410.00
+				}
+    ]
+} 
+
+```
+```
+Debito GetById
+GET - localhost:8080/api/debito/12
+```
+```
+Debito delete
+DELETE - localhost:8080/api/debito/10
+```
+```
+Debito GetValorTotalLancado
+GET - localhost:8080/api/debito/valortotallancado
+```
+```
+Debito GetByPfjPessoa
+GET - localhost:8080/api/debito/pessoa/pfj/05884843933
+```
+```
+Debito GetByNomePessoa
+GET - localhost:8080/api/debito/pessoa/nome/Jose
+```
+```
+Debito GetByIdPessoa
+GET - localhost:8080/api/debito/pessoa/3
+```
+```
+Altera data vencimento parcela
+PUT - localhost:8080/api/debito/updateDataVencimento/16/1/2024-05-05
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
