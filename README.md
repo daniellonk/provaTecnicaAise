@@ -137,6 +137,15 @@ Altera data vencimento parcela
 PUT - localhost:8080/api/debito/updateDataVencimento/16/1/2024-05-05
 ```
 
+```
+Consulta paginado
+GET - localhost:8080/api/debito/paginado
+```
+```
+Consulta paginado com parametros
+GET - http://localhost:8080/api/debito/pageParam?dataInicial=2024-02-20&dataFinal=2024-02-21
+```
+
 
 
 
