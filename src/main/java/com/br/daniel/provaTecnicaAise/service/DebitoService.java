@@ -11,6 +11,8 @@ import com.br.daniel.provaTecnicaAise.repository.PessoaRepository;
 import com.br.daniel.provaTecnicaAise.service.exception.RegraNegocioException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,33 +28,35 @@ public class DebitoService {
     private DebitoRepository debitoRepository;
     private PessoaRepository pessoaRepository;
 
-    public DebitoDto findById(Long id){
+    public DebitoDto findById(Long id) {
         Debito found = this.debitoRepository.findById(id)
                 .orElseThrow();
         return DebitoDto.convertToDTO(found);
     }
 
-    public List<DebitoDto> findAllByPessoaIdPessoa(Long id){
+    public List<DebitoDto> findAllByPessoaIdPessoa(Long id) {
         List<DebitoDto> debitosDtos = this.debitoRepository.findAllByPessoaIdPessoa(id)
                 .stream().map(DebitoDto::convertToDTO).toList();
 
         return debitosDtos;
     }
 
-    public List<DebitoDto> findAllByPessoaPfjPessoa(String pfj){
+    public List<DebitoDto> findAllByPessoaPfjPessoa(String pfj) {
         List<DebitoDto> debitosDtos = this.debitoRepository.findAllByPessoaPfjPessoa(pfj)
                 .stream().map(DebitoDto::convertToDTO).toList();
 
         return debitosDtos;
     }
-    public List<DebitoDto> findAllByPessoaNomePessoa(String nome){
+
+    public List<DebitoDto> findAllByPessoaNomePessoa(String nome) {
         List<DebitoDto> debitosDtos = this.debitoRepository.findAllByPessoaNomePessoa(nome)
                 .stream().map(DebitoDto::convertToDTO).toList();
 
         return debitosDtos;
     }
+
     public Double getValorTotal() {
-        List<Debito> debitos =  debitoRepository.findAll();
+        List<Debito> debitos = debitoRepository.findAll();
         double valorTotal = 0;
 
         for (Debito debito : debitos) {
@@ -68,11 +72,11 @@ public class DebitoService {
 
             DebitoParcela debitoParcelas = DebitoParcelaDto.convertToEntity(debitoParcelaDto, debito);
 
-            if(debitoParcelas.validaDataVencimento()){
+            if (debitoParcelas.validaDataVencimento()) {
                 throw new RegraNegocioException("Data de Vencimento deve ser maior que hoje");
             }
 
-            if(debitoParcelas.validaValorParcela()){
+            if (debitoParcelas.validaValorParcela()) {
                 throw new RegraNegocioException("Valor da Parcela deve ser maior que zero");
             }
 
@@ -89,17 +93,18 @@ public class DebitoService {
 
         gravaDebitoParcela(debito, debitoDtoPost);
 
-        if(debito.validaMinimoParcela()){
+        if (debito.validaMinimoParcela()) {
             throw new RegraNegocioException("Obrigatório no minímo uma parcela");
         }
 
-        if(debito.validaDataLancamento()){
+        if (debito.validaDataLancamento()) {
             throw new RegraNegocioException("Data Lançamento deve ser menor ou igual hoje");
         }
 
         Debito saved = debitoRepository.save(debito);
         return DebitoDto.convertToDTO(saved);
     }
+
     @Transactional
     public void delete(Long id) {
         Debito found;
@@ -107,9 +112,10 @@ public class DebitoService {
         getDebitoRepository().delete(found);
     }
 
-    private Debito debitoFoundDebito(Long idDebito){
+    private Debito debitoFoundDebito(Long idDebito) {
         return this.debitoRepository.findById(idDebito).orElseThrow(() -> new RegraNegocioException("Débito não encontrado"));
     }
+
     @Transactional
     public Debito updateDataVencimento(Long idDebito, Long parcela, LocalDate dataVencimento) {
         Debito debito = debitoFoundDebito(idDebito);
@@ -122,5 +128,19 @@ public class DebitoService {
 
         return this.debitoRepository.save(debito);
     }
+    public Page<Debito> getDebitosPaginados(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return debitoRepository.findAll(pageRequest);
+    }
 
+    @Transactional
+    public Page<Debito> getDebitosPaginadosComParametro(int pageNumber, int pageSize, LocalDate dataInicial, LocalDate dataFinal, String pfj, String nome) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        if (dataInicial != null && dataFinal != null) {
+            return debitoRepository.findByDataLancamentoBetween(dataInicial, dataFinal, pageRequest);
+        } else {
+            return this.debitoRepository.findAll(pageRequest);
+        }
+    }
 }
+

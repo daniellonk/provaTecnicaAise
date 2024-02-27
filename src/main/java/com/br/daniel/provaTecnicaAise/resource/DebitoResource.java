@@ -7,6 +7,8 @@ import com.br.daniel.provaTecnicaAise.service.DebitoService;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -69,6 +71,19 @@ public class DebitoResource {
         return ResponseEntity.ok(this.getDebitoService().updateDataVencimento(id, parcela, datavencimento));
     }
 
+    @GetMapping("paginado")
+    public Page<Debito> getDebitosPaginados(@RequestParam(defaultValue = "0") int pageNumber,
+                                            @RequestParam(defaultValue = "10") int pageSize) {
+        return debitoService.getDebitosPaginados(pageNumber, pageSize);
+    }
 
-
+    @GetMapping("pageParam")
+    public Page<Debito> getDebitosPaginadosComParametro(@RequestParam(defaultValue = "0") int pageNumber,
+                                            @RequestParam(defaultValue = "10") int pageSize,
+                                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+                                            @RequestParam(required = false) String pfj,
+                                            @RequestParam(required = false) String nome) {
+        return debitoService.getDebitosPaginadosComParametro(pageNumber, pageSize, dataInicial, dataFinal, pfj, nome);
+    }
 }
