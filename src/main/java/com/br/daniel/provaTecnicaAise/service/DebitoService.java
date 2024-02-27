@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -104,6 +105,22 @@ public class DebitoService {
         Debito found;
         found = this.debitoRepository.findById(id).orElseThrow();
         getDebitoRepository().delete(found);
+    }
+
+    private Debito debitoFoundDebito(Long idDebito){
+        return this.debitoRepository.findById(idDebito).orElseThrow(() -> new RegraNegocioException("Débito não encontrado"));
+    }
+    @Transactional
+    public Debito updateDataVencimento(Long idDebito, Long parcela, LocalDate dataVencimento) {
+        Debito debito = debitoFoundDebito(idDebito);
+
+        DebitoParcela debitoParcela = debito.getParcela().stream()
+                .filter(debitoParcela1 -> debitoParcela1.getParcela().equals(parcela))
+                .findFirst().orElseThrow(() -> new RegraNegocioException("Parcela não encontrada para o débito"));
+
+        debitoParcela.setDataVencimento(dataVencimento);
+
+        return this.debitoRepository.save(debito);
     }
 
 }

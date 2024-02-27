@@ -1,5 +1,6 @@
 package com.br.daniel.provaTecnicaAise.resource;
 
+import com.br.daniel.provaTecnicaAise.domain.Debito;
 import com.br.daniel.provaTecnicaAise.dto.DebitoDto;
 import com.br.daniel.provaTecnicaAise.dto.DebitoDtoPost;
 import com.br.daniel.provaTecnicaAise.service.DebitoService;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -60,5 +63,12 @@ public class DebitoResource {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/updateDataVencimento/{id}/{parcela}/{datavencimento}")
+    public ResponseEntity<Debito> updateDataVencimento(@PathVariable Long id, @PathVariable Long parcela, @PathVariable LocalDate datavencimento) {
+        return ResponseEntity.ok(this.getDebitoService().updateDataVencimento(id, parcela, datavencimento));
+    }
+
+
 
 }
